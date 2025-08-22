@@ -16,6 +16,12 @@ int main(){
     bool running = true;
     int mode;
 
+    std::cout << "===Tic-Tac-Toe===\n";
+    std::cout << "1. Single Player\n";
+    std::cout << "2. 2 Player\n";
+    std::cout << "Which mode do you want to play?: ";
+    std::cin >> mode;
+
     std::cout << "Would you like to be X or O?: ";
     std::cin >> choice;
 
