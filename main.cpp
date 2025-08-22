@@ -5,7 +5,7 @@
 void drawBoard(char *spaces);
 void playerMove(char *spaces, char player);
 void computerMove(char *spaces, char computer);
-bool checkWinner(char *spaces, char player, char computer);
+bool checkWinner(char *spaces, char player, char opponent); //Computer or Player 2
 bool checkTie(char *spaces);
 
 int main(){
@@ -14,6 +14,7 @@ int main(){
     char computer;
     char choice;
     bool running = true;
+    int mode;
 
     std::cout << "Would you like to be X or O?: ";
     std::cin >> choice;
