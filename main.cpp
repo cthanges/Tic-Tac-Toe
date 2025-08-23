@@ -5,13 +5,13 @@
 void drawBoard(char *spaces);
 void playerMove(char *spaces, char player);
 void computerMove(char *spaces, char computer);
-bool checkWinner(char *spaces, char player, char opponent); //Computer or Player 2
+bool checkWinner(char *spaces, char player, char opponent); //Opponent is Computer or Player 2
 bool checkTie(char *spaces);
 
 int main(){
     char spaces[9] = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
-    char player;
-    char computer;
+    char player1;
+    char player2;
     char choice;
     bool running = true;
     int mode;
@@ -22,49 +22,73 @@ int main(){
     std::cout << "Which mode do you want to play?: ";
     std::cin >> mode;
 
-    std::cout << "Would you like to be X or O?: ";
-    std::cin >> choice;
+    if(mode == 1){ //Single Player Mode
+        std::cout << "Would you like to be X or O?: ";
+        std::cin >> choice;
 
-    player = choice;
-    
-    switch(choice){
-        case 'X':
-            computer = 'O';
-            break;
-        case 'O':
-            computer = 'X';
-            break;
-        default:
-            std::cout << "Invalid choice.";
-            break;
+        player1 = choice;
+        
+        switch(toupper(choice)){
+            case 'X':
+                player2 = 'O';
+                break;
+            case 'O':
+                player2 = 'X';
+                break;
+            default:
+                std::cout << "Invalid choice.";
+                return 0;
+        }
+
+        drawBoard(spaces); //Display the blank slate
+
+        while(running){
+            playerMove(spaces, player1);
+            drawBoard(spaces); //Redraw board with updated moves
+
+            if(checkWinner(spaces, player1, player2) || checkTie(spaces)){
+                running = false;
+                break;
+            }
+
+            computerMove(spaces, player2);
+            drawBoard(spaces); //Redraw board with updated moves
+
+            if(checkWinner(spaces, player1, player2) || checkTie(spaces)){
+                running = false;
+                break;
+            }
+        }
     }
+    else if(mode == 2){ //2 Player Mode
+        //Just default for now
+        player1 = 'X';
+        player2 = 'O';
 
-    drawBoard(spaces); //Display the blank slate
+        drawBoard(spaces); //Display the blank slate
 
-    while(running){
-        playerMove(spaces, player);
-        drawBoard(spaces); //Redraw board with updated moves
+        while(running){
+            std::cout << "Player 1 (" << player1 << ")\n";
+            playerMove(spaces, player1);
+            drawBoard(spaces); //Redraw board with updated moves
 
-        if(checkWinner(spaces, player, computer)){
-            running = false;
-            break;
+            if(checkWinner(spaces, player1, player2) || checkTie(spaces)){
+                running = false;
+                break;
+            }
+
+            std::cout << "Player 2 (" << player2 << ")\n";
+            playerMove(spaces, player2);
+            drawBoard(spaces); //Redraw board with updated moves
+
+            if(checkWinner(spaces, player1, player2) || checkTie(spaces)){
+                running = false;
+                break;
+            }
         }
-        else if(checkTie(spaces)){
-            running = false;
-            break;
-        }
-
-        computerMove(spaces, computer);
-        drawBoard(spaces); //Redraw board with updated moves
-
-        if(checkWinner(spaces, player, computer)){
-            running = false;
-            break;
-        }
-        else if(checkTie(spaces)){
-            running = false;
-            break;
-        }
+    }
+    else{
+        std::cout << "Invalid mode.\n";
     }
 
     return 0;
@@ -87,13 +111,16 @@ void drawBoard(char *spaces){
 void playerMove(char *spaces, char player){
     int number;
     do{
-        std::cout << "Your turn (Select 1-9): ";
+        std::cout << "Select 1-9: ";
         std::cin >> number;
         number--; //Since we start at 0, we need to decrement the player's choice for computer to appropriately assign the marker
 
-        if(spaces[number] == ' '){
+        if(number >= 0 && number < 9 && spaces[number] == ' '){
             spaces[number] = player;
             break;
+        }
+        else{
+            std::cout << "Invalid move.";
         }
 
     }while(!number > 0 || !number < 8);
@@ -112,7 +139,7 @@ void computerMove(char *spaces, char computer){
     }
 }
 
-bool checkWinner(char *spaces, char player, char computer){
+bool checkWinner(char *spaces, char player, char opponent){ //NEED TO CHANGE OUTPUTS
     //Rows
     if(spaces[0] != ' ' && spaces[0] == spaces[1] && spaces[1] == spaces[2]){
         spaces[0] == player ? std::cout << "You Win!\n" : std::cout << "Computer Wins!\n";
